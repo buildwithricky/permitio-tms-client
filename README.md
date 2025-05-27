@@ -5,7 +5,7 @@ This the client for my travel-management-system with permitio article. follow al
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/your-nextjs-app.git
+git clone https://github.com/buildwithricky/permitio-tms-client
 cd your-nextjs-app
 ```
 
