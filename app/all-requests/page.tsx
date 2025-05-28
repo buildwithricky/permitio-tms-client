@@ -22,9 +22,11 @@ import {
 import { approveRequest, deleteRequest, getAllRequests } from "@/lib/api"
 
 type TravelRequest = {
-  id: string
-  employeeName: string
-  employeeEmail: string
+  _id: string,
+  user_id:{
+    first_name:string,
+    email:string
+  },
   destination: string
   purpose: string
   status: "pending" | "approved" | "rejected"
@@ -63,8 +65,8 @@ export default function AllRequestsPage() {
     const matchesSearch =
       request.destination.toLowerCase().includes(searchQuery.toLowerCase()) ||
       request.purpose.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      request.employeeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      request.employeeEmail.toLowerCase().includes(searchQuery.toLowerCase())
+      request.user_id.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      request.user_id.email.toLowerCase().includes(searchQuery.toLowerCase())
 
     const matchesStatus = statusFilter === "all" || request.status === statusFilter
 
@@ -80,7 +82,7 @@ export default function AllRequestsPage() {
     try {
  
     await approveRequest(id)
-      setRequests((prevRequests) => prevRequests.map((req) => (req.id === id ? { ...req, status: "approved" } : req)))
+      setRequests((prevRequests) => prevRequests.map((req) => (req._id === id ? { ...req, status: "approved" } : req)))
     } catch (err) {
       setError("Failed to approve request")
       console.error(err)
@@ -97,7 +99,7 @@ export default function AllRequestsPage() {
       await deleteRequest(deleteId)
       await new Promise((resolve) => setTimeout(resolve, 1000))
       // Update local state
-      setRequests((prevRequests) => prevRequests.filter((req) => req.id !== deleteId))
+      setRequests((prevRequests) => prevRequests.filter((req) => req._id !== deleteId))
     } catch (err) {
       setError("Failed to delete request")
       console.error(err)
@@ -166,11 +168,11 @@ export default function AllRequestsPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredRequests.map((request) => (
-                    <TableRow key={request.id}>
+                    <TableRow key={request._id}>
                       <TableCell>
                         <div>
-                          <p className="font-medium">{request.employeeName}</p>
-                          <p className="text-xs text-muted-foreground">{request.employeeEmail}</p>
+                          <p className="font-medium">{request.user_id?.first_name}</p>
+                          <p className="text-xs text-muted-foreground">{request.user_id?.email}</p>
                         </div>
                       </TableCell>
                       <TableCell>{request.destination}</TableCell>
@@ -210,7 +212,7 @@ export default function AllRequestsPage() {
                                 <Button
                                   variant="ghost"
                                   className="w-full justify-start"
-                                  onClick={() => handleApprove(request.id)}
+                                  onClick={() => handleApprove(request._id)}
                                   disabled={isProcessing}
                                 >
                                   <CheckCircle className="mr-2 h-4 w-4" />
@@ -223,7 +225,7 @@ export default function AllRequestsPage() {
                               <Button
                                 variant="ghost"
                                 className="w-full justify-start text-destructive"
-                                onClick={() => setDeleteId(request.id)}
+                                onClick={() => setDeleteId(request._id)}
                                 disabled={isProcessing}
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
