@@ -109,3 +109,4 @@ pnpm install --force
 
 Down below is a link to an article , have fun reading
 
+https://medium.com/p/travel-management-system-with-granular-access-control-using-permit-io-03d291072924?source=social.linkedin&_nonce=vD7vfFDD
